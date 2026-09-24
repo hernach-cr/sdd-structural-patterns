@@ -10,15 +10,21 @@ class StreamingFacade:
     """
 
     def __init__(self, payment_processor: PaymentProcessor):
-      # TODO: store the payment processor and start unsubscribed
-      pass
+      self.payment_processor=payment_processor
+      self.beingsubscribed= False
+   
+      
 
     def subscribe(self, monthly_fee: float) -> str:
-      # TODO: charge `monthly_fee` through the payment processor, mark the
-      # account as subscribed, and return the processor's receipt string.
-      pass
+      ticket=self.payment_processor.pay(monthly_fee)
+      self.beingsubscribed=True
+      return ticket
+    
+      
 
     def watch(self, video: Video) -> str:
+      if not self.beingsubscribed:
+          raise PermissionError("subscription required")
       # TODO: if not subscribed, raise PermissionError("subscription required").
       # Otherwise delegate to `video.play()` and return its result.
-      pass
+      return video.play()
